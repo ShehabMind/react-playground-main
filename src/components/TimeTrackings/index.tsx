@@ -1,4 +1,5 @@
 import TimeTrackingsView from "./view";
-export const TimeTrackinScreen = () => {
+
+export const TimeTrackingScreen = () => {
   return <TimeTrackingsView />;
 };

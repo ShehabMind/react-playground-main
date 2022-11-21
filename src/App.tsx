@@ -1,13 +1,16 @@
+import React, { useContext } from "react";
 import "./App.css";
 import Api, { User } from "@timetac/js-client-library";
 import { environment, authCredentials } from "./apiConfig";
 import { useEffect, useState } from "react";
-
+import { TtContextData } from "./context/TimeTrackingContext";
+import { TimeTrackingScreen } from "./components/TimeTrackings";
 function App() {
   const api = new Api(environment);
-
+  const [usersTimeTrackingData, setUsersTimeTrackingData] =
+    useContext(TtContextData);
   const [userData, setUserData] = useState<User>();
-  const [usersTimeTrackingData, setUsersTimeTrackingData] = useState<any>();
+
   const [authed, setAuthed] = useState<boolean>(false);
 
   useEffect(() => {
@@ -32,10 +35,7 @@ function App() {
   console.log("the data is", usersTimeTrackingData);
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Welcome to TimeTac's react </h1>
-      </header>
-      <h1>assdsdddsdsdsadddd {userData?.firstname}</h1>
+      <TimeTrackingScreen />
     </div>
   );
 }
