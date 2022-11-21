@@ -28,7 +28,7 @@ function App() {
         setUsersTimeTrackingData(userTracking);
       });
     }
-  }, [authed, userData, api.users]);
+  }, [authed, userData, api.users, usersTimeTrackingData]);
   console.log("the data is", usersTimeTrackingData);
   return (
     <div className="App">
