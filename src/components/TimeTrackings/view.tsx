@@ -19,6 +19,7 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import moment from "moment";
 
 import { Button, Grid, TextField } from "@mui/material";
 // import PopUp from "../../components/pop"
@@ -233,7 +234,7 @@ function TimeTrackingsView() {
   const [startTime, setStartTime] = useState(0);
   const [EndTime, setEndTime] = useState(0);
   const [user_id, setUser_id] = useState(0);
-
+  const dateToFormat = "MM-DD-YYYY HH:mm:ss";
   const verifyParams = {
     firstName: Task_Id,
     secondName: startTime,
@@ -354,8 +355,12 @@ function TimeTrackingsView() {
                         {row.id}
                       </TableCell>
 
-                      <TableCell align="right">{row.start_time}</TableCell>
-                      <TableCell align="right">{row.end_time}</TableCell>
+                      <TableCell align="right">
+                        {moment(row.start_time).format("MMMM Do YYYY, h:mm:ss")}
+                      </TableCell>
+                      <TableCell align="right">
+                        {moment(row.end_time).format("MMMM Do YYYY, h:mm:ss")}
+                      </TableCell>
                     </TableRow>
                   );
                 })}
