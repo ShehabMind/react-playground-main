@@ -4,6 +4,7 @@ import { environment, authCredentials } from "./apiConfig";
 import { useEffect, useState, useContext } from "react";
 import { TtContextData } from "./context/TimeTrackingContext";
 import TimeTrackingView from "./components/TimeTrackings/view";
+import { Button } from "@mui/material";
 function App() {
   const api = new Api(environment);
   const [usersTimeTrackingData, setUsersTimeTrackingData] =
@@ -12,7 +13,14 @@ function App() {
 
   const [authed, setAuthed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  const handleRefresh = () => {
+    setIsLoading(true);
+    api.timeTrackings.read().then((userTracking) => {
+      setUsersTimeTrackingData(userTracking);
+      console.log("the data is", usersTimeTrackingData);
+      setIsLoading(false);
+    });
+  };
   useEffect(() => {
     if (!authed) {
       api.authentication.login(authCredentials).then((tokensData) => {
@@ -40,9 +48,35 @@ function App() {
 
     console.log(userData, "------------------");
     console.log("the auth is", authed);
-  }, [authed, userData, api.users]);
+  }, [
+    authed,
+    userData,
+    api.users,
+    api.timeTrackings,
+    usersTimeTrackingData,
+    setUsersTimeTrackingData,
+  ]);
 
-  return <>{isLoading ? <h1>loading</h1> : <TimeTrackingView />}</>;
+  return (
+    <>
+      {isLoading ? (
+        <h1>loading</h1>
+      ) : (
+        <>
+          <TimeTrackingView />
+          <Button
+            onClick={() => {
+              handleRefresh();
+            }}
+            style={{ marginRight: "3%" }}
+            variant="contained"
+          >
+            Refresh
+          </Button>
+        </>
+      )}
+    </>
+  );
 }
 
 export default App;
