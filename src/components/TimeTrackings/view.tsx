@@ -199,7 +199,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          task
+          TimTac
         </Typography>
       )}
       {numSelected > 0 ? (
