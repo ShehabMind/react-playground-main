@@ -20,8 +20,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import moment from "moment";
-
+import Popup from "../../components/Popup";
 import { Button, Grid, TextField } from "@mui/material";
+import type {} from "@mui/x-date-pickers/themeAugmentation";
+import dayjs, { Dayjs } from "dayjs";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+
 // import PopUp from "../../components/pop"
 ////
 interface Data {
@@ -221,6 +228,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 function TimeTrackingsView() {
+  const currentTime = Date().toLocaleString();
+  var currentDate = new Date();
+  const defaultEndTime = new Date(currentDate.getTime() + 30 * 60 * 1000);
   const [usersTimeTrackingData, setUsersTimeTrackingData] =
     useContext(TtContextData);
   const [order, setOrder] = React.useState<Order>("asc");
@@ -230,17 +240,17 @@ function TimeTrackingsView() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [openPopup, setOpenPopup] = useState(false);
-  const [Task_Id, setTask_Id] = useState(0);
-  const [startTime, setStartTime] = useState(0);
-  const [EndTime, setEndTime] = useState(0);
-  const [user_id, setUser_id] = useState(0);
-  const dateToFormat = "MM-DD-YYYY HH:mm:ss";
+  const [Task_Id, setTask_Id] = useState<any>();
+  const [user_id, setUser_id] = useState<any>(0);
+  const [startTime, setStartTime] = useState<Dayjs | null>(dayjs(currentTime));
+  const [endTime, setEndTime] = useState<Dayjs | null>(dayjs(defaultEndTime));
   const verifyParams = {
     firstName: Task_Id,
     secondName: startTime,
-    phone: EndTime,
+    phone: endTime,
     user_id: user_id,
   };
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data
@@ -382,6 +392,57 @@ function TimeTrackingsView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <>
+        <Button
+          onClick={() => {
+            setOpenPopup(true);
+          }}
+          style={{ marginRight: "3%" }}
+          variant="contained"
+        >
+          + Add time Tracking
+        </Button>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Popup
+            title="Add time Tracking"
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+          >
+            <Grid container>
+              <Grid item xs={8}>
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="Start Time"
+                  value={startTime}
+                  onChange={(newValue) => {
+                    setStartTime(newValue);
+                  }}
+                />
+
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="End Time"
+                  value={endTime}
+                  onChange={(newValue) => {
+                    setEndTime(newValue);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                // onClick={() => {
+                //   HandleAddDriver();
+                // }}
+                // type="submit"
+                // text="Submit"
+                >
+                  submit
+                </Button>
+              </Grid>
+            </Grid>
+          </Popup>
+        </LocalizationProvider>
+      </>
     </Box>
   );
 }
