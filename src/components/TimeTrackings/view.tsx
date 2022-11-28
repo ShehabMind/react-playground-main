@@ -20,16 +20,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import moment from "moment";
+
 import Popup from "../../components/Popup";
 import { Button, Grid, TextField } from "@mui/material";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
 import dayjs, { Dayjs } from "dayjs";
-
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import Api, { User } from "@timetac/js-client-library";
+import { environment, authCredentials } from "../../apiConfig";
 
-// import PopUp from "../../components/pop"
 ////
 interface Data {
   id: number;
@@ -59,8 +60,6 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
 function stableSort<T>(
   array: readonly T[],
   comparator: (a: T, b: T) => number
@@ -228,27 +227,72 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 function TimeTrackingsView() {
+  const api = new Api(environment);
   const currentTime = Date().toLocaleString();
   var currentDate = new Date();
   const defaultEndTime = new Date(currentDate.getTime() + 30 * 60 * 1000);
-  const [usersTimeTrackingData, setUsersTimeTrackingData] =
-    useContext(TtContextData);
+  const [usersTimeTrackingData] = useContext(TtContextData);
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  const [dense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [openPopup, setOpenPopup] = useState(false);
-  const [Task_Id, setTask_Id] = useState<any>();
-  const [user_id, setUser_id] = useState<any>(0);
-  const [startTime, setStartTime] = useState<Dayjs | null>(dayjs(currentTime));
-  const [endTime, setEndTime] = useState<Dayjs | null>(dayjs(defaultEndTime));
+  const [Task_Id] = useState<any>();
+  const [user_id] = useState<any>(0);
+  const [startTime, setStartTime] = useState<any>(currentTime);
+  const [endTime, setEndTime] = useState<any>(defaultEndTime);
+  var moment = require("moment-timezone");
+  let Start = moment(startTime.$d);
+  let End = moment(endTime.$d);
   const verifyParams = {
-    firstName: Task_Id,
-    secondName: startTime,
-    phone: endTime,
-    user_id: user_id,
+    user_id: 1,
+    task_id: 4,
+    start_time: Start.tz("Europe/Vienna").format("yyyy-MM-dd’T’HH:mm:ss"),
+    end_time: End.tz("Europe/Vienna").format("yyyy-MM-dd’T’HH:mm:ss"),
+    start_time_timezone: "string",
+    end_time_timezone: "string",
+    max_hours_alert: true,
+    is_billable: true,
+    notes: "string",
+    t_iv_1: "string",
+    t_iv_2: "string",
+    t_iv_3: "string",
+    t_iv_4: "string",
+    t_iv_5: "string",
+    t_iv_6: "string",
+    u_iv_1: "string",
+    u_iv_2: "string",
+    u_iv_3: "string",
+    u_iv_4: "string",
+    u_iv_5: "string",
+    u_iv_6: "string",
+    approved_by_admin: true,
+    geo_start_lat: 0,
+    geo_start_long: 0,
+    geo_start_accuracy: 0,
+    geo_end_lat: 0,
+    geo_end_long: 0,
+    geo_end_accuracy: 0,
+    client_unique_id: "string",
+    start_type_id: 0,
+    end_type_id: 0,
+    _request_user_comment: "string",
+    _is_offline_live_tracking: true,
+    _insert_into_conflicting: true,
+    _write_permission_type: "string",
+  };
+  console.log(
+    Start.tz("Europe/Vienna").format(
+      "yyyy-MM-dd’T’HH:mm:ss",
+      api.users.readMe(),
+      " -----------"
+    )
+  );
+  const handleCreate = () => {
+    api.timeTrackings.create(verifyParams);
+    console.log(api.timeTrackings.create(verifyParams));
   };
 
   const handleRequestSort = (
@@ -307,7 +351,7 @@ function TimeTrackingsView() {
     page > 0
       ? Math.max(0, (1 + page) * rowsPerPage - usersTimeTrackingData?.length)
       : 0;
-
+  console.log(moment(startTime.$d).format());
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -430,11 +474,10 @@ function TimeTrackingsView() {
               </Grid>
               <Grid item xs={6}>
                 <Button
-                // onClick={() => {
-                //   HandleAddDriver();
-                // }}
-                // type="submit"
-                // text="Submit"
+                  onClick={() => {
+                    handleCreate();
+                  }}
+                  type="submit"
                 >
                   submit
                 </Button>
