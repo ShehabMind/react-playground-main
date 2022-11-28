@@ -5,6 +5,9 @@ import { useEffect, useState, useContext } from "react";
 import { TtContextData } from "./context/TimeTrackingContext";
 import TimeTrackingView from "./components/TimeTrackings/view";
 import { Button } from "@mui/material";
+import { LineWave } from "react-loader-spinner";
+
+////
 function App() {
   const api = new Api(environment);
   const [usersTimeTrackingData, setUsersTimeTrackingData] =
@@ -60,7 +63,26 @@ function App() {
   return (
     <>
       {isLoading ? (
-        <h1>loading</h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <LineWave
+            height="500"
+            width="500"
+            color="#4fa94d"
+            ariaLabel="line-wave"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            firstLineColor="blue"
+            middleLineColor="green"
+            lastLineColor="grey"
+          />
+        </div>
       ) : (
         <>
           <TimeTrackingView />
@@ -68,7 +90,11 @@ function App() {
             onClick={() => {
               handleRefresh();
             }}
-            style={{ marginRight: "3%" }}
+            style={{
+              marginRight: "2%",
+
+              float: "right",
+            }}
             variant="contained"
           >
             Refresh

@@ -24,14 +24,13 @@ import moment from "moment";
 import Popup from "../../components/Popup";
 import { Button, Grid, TextField } from "@mui/material";
 import type {} from "@mui/x-date-pickers/themeAugmentation";
-import dayjs, { Dayjs } from "dayjs";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import Api, { User } from "@timetac/js-client-library";
-import { environment, authCredentials } from "../../apiConfig";
+import Api from "@timetac/js-client-library";
+import { environment } from "../../apiConfig";
 
-////
 interface Data {
   id: number;
   task_id: number;
@@ -239,8 +238,6 @@ function TimeTrackingsView() {
   const [dense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [openPopup, setOpenPopup] = useState(false);
-  const [Task_Id] = useState<any>();
-  const [user_id] = useState<any>(0);
   const [startTime, setStartTime] = useState<any>(currentTime);
   const [endTime, setEndTime] = useState<any>(defaultEndTime);
   var moment = require("moment-timezone");
@@ -249,8 +246,8 @@ function TimeTrackingsView() {
   const verifyParams = {
     user_id: 1,
     task_id: 4,
-    start_time: Start.tz("Europe/Vienna").format("yyyy-MM-dd’T’HH:mm:ss"),
-    end_time: End.tz("Europe/Vienna").format("yyyy-MM-dd’T’HH:mm:ss"),
+    start_time: Start.tz("Europe/Vienna").format("yyyy-MM-dd HH:mm:ss"),
+    end_time: End.tz("Europe/Vienna").format("yyyy-MM-dd HH:mm:ss"),
     start_time_timezone: "string",
     end_time_timezone: "string",
     max_hours_alert: true,
@@ -427,7 +424,7 @@ function TimeTrackingsView() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25, 50]}
+          rowsPerPageOptions={[5, 10, 25, 50, 100]}
           component="div"
           count={usersTimeTrackingData?.length}
           rowsPerPage={rowsPerPage}
@@ -441,7 +438,7 @@ function TimeTrackingsView() {
           onClick={() => {
             setOpenPopup(true);
           }}
-          style={{ marginRight: "3%" }}
+          style={{ marginLeft: "2%", float: "left" }}
           variant="contained"
         >
           + Add time Tracking
